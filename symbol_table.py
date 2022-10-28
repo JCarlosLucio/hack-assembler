@@ -57,7 +57,6 @@ comp_table: dict[str, str] = {
     "D|M": "1010101",
 }
 
-
 dest_table: dict[str, str] = {
     "null": "000",
     "M": "001",
@@ -67,4 +66,15 @@ dest_table: dict[str, str] = {
     "AM": "101",
     "AD": "110",
     "AMD": "111",
+}
+
+jump_table: dict[str, str] = {
+    "null": "000",
+    "JGT": "001",
+    "JEQ": "010",
+    "JGE": "011",
+    "JLT": "100",
+    "JNE": "101",
+    "JLE": "110",
+    "JMP": "111",
 }
