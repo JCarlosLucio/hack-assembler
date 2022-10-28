@@ -1,5 +1,6 @@
 from parser import parse
-
+from coder import translate
+from symbol_table import symbol_table, dest_table, comp_table, jump_table
 
 # SymbolTable - manages the symbol table
 
@@ -12,7 +13,9 @@ with open(f"./to_assemble/{file_name}.asm") as file:
 # Parser - unpacks each instruction into its underlying field
 parsed = parse(contents)
 
+# Code - translates each field into its corresponding binary value
+translated = translate(parsed, symbol_table, dest_table, comp_table, jump_table)
 
 # create/write to new file
 with open(f"./assembled/{file_name}.hack", mode="w") as data:
-    data.write(f"{parsed}")
+    data.write(f"{translated}")
