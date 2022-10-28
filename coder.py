@@ -71,3 +71,40 @@ def translate_c_instruction(
     binary = "111" + comp + dest + jump
 
     return binary
+
+
+def translate(
+    lines: list[str],
+    symbol_table: dict[str, int],
+    dest_table: dict[str, str],
+    comp_table: dict[str, str],
+    jump_table: dict[str, str],
+):
+    """The translation of the entire of the parsed lines of a asm program
+
+    Args:
+        lines (list[str]): the parsed lines of the asm program
+        symbol_table (dict[str, int]): the symbols used for transforming a instructions
+        dest_table (dict[str, str]): the symbols for transforming dest instruction in c instructions
+        comp_table (dict[str, str]): the symbols for transforming comp instruction in c instructions
+        jump_table (dict[str, str]): the symbols for transforming jump instruction in c instructions
+
+    Returns:
+        str: a string of the translated lines
+    """
+    translated: list[str] = []
+
+    for line in lines:
+        if line.startswith("@"):
+            binary = translate_a_instruction(line, symbol_table)
+            translated.append(binary)
+        else:
+            binary = translate_c_instruction(
+                line,
+                dest_table,
+                comp_table,
+                jump_table,
+            )
+            translated.append(binary)
+
+    return "\n".join(translated)
