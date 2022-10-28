@@ -12,3 +12,12 @@ in python.
 3. Install dependencies - `pip install -r requirements.txt`
 4. Run the project from the root directory - `python3 main.py`
 5. Running tests - `pytest`
+
+---
+
+## Todo
+
+- ~~Translate \*.asm files~~
+- ~~Handle files with comments and whitespace~~
+- ~~Handle lines with inline comments~~
+- Handle labels and variables
