@@ -1,4 +1,4 @@
-from coder import translate_a_instruction, translate_c_instruction
+from coder import find_between, translate_a_instruction, translate_c_instruction
 from symbol_table import symbol_table, dest_table, comp_table, jump_table
 
 
@@ -15,6 +15,14 @@ def test_translate_c_instruction_without_semicolon():
         translate_c_instruction("MD=A-1", dest_table, comp_table, jump_table)
         == "1110110010011000"
     )
+
+
+def test_find_between_parentheses():
+    assert find_between("(LOOP)", "(", ")") == "LOOP"
+
+
+def test_find_between_equals_semicolon():
+    assert find_between("D=D+A;JMP", "=", ";") == "D+A"
 
 
 def test_translate_c_instruction_without_equals():
