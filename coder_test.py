@@ -1,5 +1,6 @@
 from coder import (
     find_between,
+    handle_labels,
     translate,
     translate_a_instruction,
     translate_c_instruction,
@@ -28,6 +29,65 @@ def test_find_between_parentheses():
 
 def test_find_between_equals_semicolon():
     assert find_between("D=D+A;JMP", "=", ";") == "D+A"
+
+
+def test_handle_one_label():
+    assert handle_labels(["@9", "(LOOP)", "@LOOP"], {"R0": 0}) == {
+        "lines": ["@9", "@LOOP"],
+        "symbol_table": {"R0": 0, "LOOP": 1},
+    }
+
+
+def test_handle_multiple_labels():
+    assert handle_labels(
+        [
+            "@R0",
+            "D=M",
+            "@R1",
+            "D=D-M",
+            "@OUTPUT_FIRST",
+            "D;JGT",
+            "@R1",
+            "D=M",
+            "@OUTPUT_D",
+            "0;JMP",
+            "(OUTPUT_FIRST)",
+            "@R0",
+            "D=M",
+            "(OUTPUT_D)",
+            "@R2",
+            "M=D",
+            "(INFINITE_LOOP)",
+            "@INFINITE_LOOP",
+            "0;JMP",
+        ],
+        {"R0": 0},
+    ) == {
+        "lines": [
+            "@R0",
+            "D=M",
+            "@R1",
+            "D=D-M",
+            "@OUTPUT_FIRST",
+            "D;JGT",
+            "@R1",
+            "D=M",
+            "@OUTPUT_D",
+            "0;JMP",
+            "@R0",
+            "D=M",
+            "@R2",
+            "M=D",
+            "@INFINITE_LOOP",
+            "0;JMP",
+        ],
+        "symbol_table": {
+            "R0": 0,
+            "OUTPUT_FIRST": 10,
+            "OUTPUT_D": 12,
+            "INFINITE_LOOP": 14,
+        },
+    }
 
 
 def test_translate_c_instruction_without_equals():
