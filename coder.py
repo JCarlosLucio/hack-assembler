@@ -12,6 +12,34 @@ def find_between(s: str, start: str, end: str):
     return s[s.index(start) + 1 : s.index(end)]
 
 
+def handle_labels(
+    lines: list[str], symbol_table: dict[str, int]
+) -> dict[str, list[str] | dict[str, int]]:
+    """Handles labels ( surrounded by parentheses ex. (LOOP)) for translation
+    Removes labels from lines and adds their values to the symbol table
+
+    Args:
+        lines (list[str]): The lines with labels
+        symbol_table (dict[str, int]): the symbol table to adding label values
+
+    Returns:
+        dict[str, list[str] | dict[str, int]]: _description_
+    """
+    labels_count = 0
+    lines_without_labels: list[str] = []
+
+    # filter lines without labels and add their value to symbol_table
+    for i, line in enumerate(lines):
+        if line.startswith("(") and line.endswith(")"):
+            label = find_between(line, "(", ")")
+            symbol_table[label] = i - labels_count
+            labels_count += 1
+        else:
+            lines_without_labels.append(line)
+
+    return {"lines": lines_without_labels, "symbol_table": symbol_table}
+
+
 def translate_a_instruction(line: str, symbol_table: dict[str, int]):
     """Translates a instructions to their binary form
         ex. "@R9" -> "0000000000001001"
