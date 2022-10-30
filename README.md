@@ -20,4 +20,4 @@ in python.
 - ~~Translate \*.asm files~~
 - ~~Handle files with comments and whitespace~~
 - ~~Handle lines with inline comments~~
-- Handle labels and variables
+- ~~Handle labels and variables~~
