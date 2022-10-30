@@ -40,6 +40,30 @@ def handle_labels(
     return {"lines": lines_without_labels, "symbol_table": symbol_table}
 
 
+def handle_variables(lines: list[str], symbol_table: dict[str, int]) -> dict[str, int]:
+    """Add variables (a instructions that aren't default symbols or labels) to symbol_table
+
+    Args:
+        lines (list[str]): clean lines without labels and with variables to be handled
+        symbol_table (dict[str, int]): the symbol table where variables will be added
+
+    Returns:
+        dict[str, int]: the symbol table with variables added
+    """
+    # 16 is the start of memory space for variables from language specs
+    variable_mem_pos = 16
+
+    for line in lines:
+        if line.startswith("@"):
+            a_instruction = line[1:]
+
+            if not a_instruction.isdigit() and not (a_instruction in symbol_table):
+                symbol_table[a_instruction] = variable_mem_pos
+                variable_mem_pos += 1
+
+    return symbol_table
+
+
 def translate_a_instruction(line: str, symbol_table: dict[str, int]):
     """Translates a instructions to their binary form
         ex. "@R9" -> "0000000000001001"
