@@ -144,12 +144,18 @@ def translate(
     Returns:
         str: a string of the translated lines
     """
+    without_labels = handle_labels(lines, symbol_table)
+
+    symbol_table = handle_variables(*without_labels)
+
     translated: list[str] = []
 
-    for line in lines:
+    print(symbol_table)
+
+    for line in without_labels[0]:
+        binary = None
         if line.startswith("@"):
             binary = translate_a_instruction(line, symbol_table)
-            translated.append(binary)
         else:
             binary = translate_c_instruction(
                 line,
@@ -157,6 +163,6 @@ def translate(
                 comp_table,
                 jump_table,
             )
-            translated.append(binary)
+        translated.append(binary)
 
     return "\n".join(translated)
