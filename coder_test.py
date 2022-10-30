@@ -33,10 +33,10 @@ def test_find_between_equals_semicolon():
 
 
 def test_handle_one_label():
-    assert handle_labels(["@9", "(LOOP)", "@LOOP"], {"R0": 0}) == {
-        "lines": ["@9", "@LOOP"],
-        "symbol_table": {"R0": 0, "LOOP": 1},
-    }
+    assert handle_labels(["@9", "(LOOP)", "@LOOP"], {"R0": 0}) == (
+        ["@9", "@LOOP"],
+        {"R0": 0, "LOOP": 1},
+    )
 
 
 def test_handle_multiple_labels():
@@ -63,8 +63,8 @@ def test_handle_multiple_labels():
             "0;JMP",
         ],
         {"R0": 0},
-    ) == {
-        "lines": [
+    ) == (
+        [
             "@R0",
             "D=M",
             "@R1",
@@ -82,7 +82,7 @@ def test_handle_multiple_labels():
             "@INFINITE_LOOP",
             "0;JMP",
         ],
-        "symbol_table": {
+        {
             "R0": 0,
             "OUTPUT_FIRST": 10,
             "OUTPUT_D": 12,
