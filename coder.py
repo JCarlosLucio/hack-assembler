@@ -14,7 +14,7 @@ def find_between(s: str, start: str, end: str):
 
 def handle_labels(
     lines: list[str], symbol_table: dict[str, int]
-) -> dict[str, list[str] | dict[str, int]]:
+) -> tuple[list[str], dict[str, int]]:
     """Handles labels ( surrounded by parentheses ex. (LOOP)) for translation
     Removes labels from lines and adds their values to the symbol table
 
@@ -23,7 +23,7 @@ def handle_labels(
         symbol_table (dict[str, int]): the symbol table to adding label values
 
     Returns:
-        dict[str, list[str] | dict[str, int]]: _description_
+        tuple[list[str], dict[str, int]]: the lines without labels and updated dict
     """
     labels_count = 0
     lines_without_labels: list[str] = []
@@ -37,7 +37,31 @@ def handle_labels(
         else:
             lines_without_labels.append(line)
 
-    return {"lines": lines_without_labels, "symbol_table": symbol_table}
+    return (lines_without_labels, symbol_table)
+
+
+def handle_variables(lines: list[str], symbol_table: dict[str, int]) -> dict[str, int]:
+    """Add variables (a instructions that aren't default symbols or labels) to symbol_table
+
+    Args:
+        lines (list[str]): clean lines without labels and with variables to be handled
+        symbol_table (dict[str, int]): the symbol table where variables will be added
+
+    Returns:
+        dict[str, int]: the symbol table with variables added
+    """
+    # 16 is the start of memory space for variables from language specs
+    variable_mem_pos = 16
+
+    for line in lines:
+        if line.startswith("@"):
+            a_instruction = line[1:]
+
+            if not a_instruction.isdigit() and not (a_instruction in symbol_table):
+                symbol_table[a_instruction] = variable_mem_pos
+                variable_mem_pos += 1
+
+    return symbol_table
 
 
 def translate_a_instruction(line: str, symbol_table: dict[str, int]):
@@ -120,12 +144,18 @@ def translate(
     Returns:
         str: a string of the translated lines
     """
+    without_labels = handle_labels(lines, symbol_table)
+
+    symbol_table = handle_variables(*without_labels)
+
     translated: list[str] = []
 
-    for line in lines:
+    print(symbol_table)
+
+    for line in without_labels[0]:
+        binary = None
         if line.startswith("@"):
             binary = translate_a_instruction(line, symbol_table)
-            translated.append(binary)
         else:
             binary = translate_c_instruction(
                 line,
@@ -133,6 +163,6 @@ def translate(
                 comp_table,
                 jump_table,
             )
-            translated.append(binary)
+        translated.append(binary)
 
     return "\n".join(translated)
