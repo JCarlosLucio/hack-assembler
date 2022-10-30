@@ -14,7 +14,7 @@ def find_between(s: str, start: str, end: str):
 
 def handle_labels(
     lines: list[str], symbol_table: dict[str, int]
-) -> dict[str, list[str] | dict[str, int]]:
+) -> tuple[list[str], dict[str, int]]:
     """Handles labels ( surrounded by parentheses ex. (LOOP)) for translation
     Removes labels from lines and adds their values to the symbol table
 
@@ -23,7 +23,7 @@ def handle_labels(
         symbol_table (dict[str, int]): the symbol table to adding label values
 
     Returns:
-        dict[str, list[str] | dict[str, int]]: _description_
+        tuple[list[str], dict[str, int]]: the lines without labels and updated dict
     """
     labels_count = 0
     lines_without_labels: list[str] = []
@@ -37,7 +37,7 @@ def handle_labels(
         else:
             lines_without_labels.append(line)
 
-    return {"lines": lines_without_labels, "symbol_table": symbol_table}
+    return (lines_without_labels, symbol_table)
 
 
 def handle_variables(lines: list[str], symbol_table: dict[str, int]) -> dict[str, int]:
