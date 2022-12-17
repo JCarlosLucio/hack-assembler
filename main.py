@@ -1,4 +1,4 @@
-from parser import parse
+from asm_parser import parse
 from coder import translate
 from symbol_table import symbol_table, dest_table, comp_table, jump_table
 

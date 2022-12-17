@@ -1,4 +1,4 @@
-from parser import parse
+from asm_parser import parse
 
 
 def test_simple_parse():
